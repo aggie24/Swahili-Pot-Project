@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Swahilipot Hub attachment portal — role-based dashboards for attachees, supervisors and admins." />
+  <title>Swahilipot Hub · Attachment Portal</title>
+  <link rel="icon" type="image/png" href="assets/sph-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ======================= LOGIN VIEW ======================= -->
+  <section id="view-login" class="view auth-view" aria-label="Login">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="assets/sph-logo.png" alt="Swahilipot Hub" class="auth-logo" />
+        <p class="auth-tagline">Attachment Portal</p>
+      </div>
+      <h1 class="auth-title">Sign in to your account</h1>
+      <p class="auth-sub">Choose your role workspace by signing in with your credentials.</p>
+
+      <form id="login-form" class="auth-form" autocomplete="on" novalidate>
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input type="email" id="login-email" name="email" placeholder="you@swahilipot.org" required />
+        </label>
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input type="password" id="login-password" name="password" placeholder="••••••••" required />
+        </label>
+        <p id="login-error" class="form-error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+      </form>
+
+      <div class="demo-accounts">
+        <p class="demo-title">Demo accounts — click to autofill</p>
+        <div class="demo-grid">
+          <button class="demo-chip" data-email="attachee@swahilipot.org" data-password="attach123">
+            <span class="demo-role">Attachee</span>
+            <span class="demo-email">attachee@swahilipot.org</span>
+          </button>
+          <button class="demo-chip" data-email="supervisor@swahilipot.org" data-password="super123">
+            <span class="demo-role">Supervisor</span>
+            <span class="demo-email">supervisor@swahilipot.org</span>
+          </button>
+          <button class="demo-chip" data-email="admin@swahilipot.org" data-password="admin123">
+            <span class="demo-role">Admin</span>
+            <span class="demo-email">admin@swahilipot.org</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <footer class="auth-foot">Swahilipot Hub Foundation · Mombasa, Kenya</footer>
+  </section>
+
+  <!-- ======================= APP SHELL (dashboards) ======================= -->
+  <div id="app-shell" class="app-shell" hidden>
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar" aria-label="Primary navigation">
+      <div class="sidebar-brand">
+        <img src="assets/sph-logo-white.png" alt="Swahilipot Hub" class="sidebar-logo" />
+      </div>
+      <nav id="sidebar-nav" class="sidebar-nav"></nav>
+      <div class="sidebar-foot">
+        <div class="sidebar-user">
+          <div id="side-avatar" class="avatar"></div>
+          <div class="sidebar-user-meta">
+            <span id="side-user-name" class="sidebar-user-name"></span>
+            <span id="side-user-role" class="sidebar-user-role"></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div id="scrim" class="scrim" hidden></div>
+
+    <!-- Main column -->
+    <div class="main-col">
+      <header class="topbar">
+        <button id="menu-toggle" class="icon-btn menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+        </button>
+        <div class="topbar-titles">
+          <h2 id="page-title" class="page-title">Dashboard</h2>
+          <p id="page-sub" class="page-sub"></p>
+        </div>
+        <div class="topbar-actions">
+          <div class="bell-wrap">
+            <button id="bell-btn" class="icon-btn" aria-label="Notifications">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-1.7 1.7A1 1 0 0 0 5 19h14a1 1 0 0 0 .7-1.71Z"/></svg>
+              <span id="bell-count" class="bell-count" hidden>0</span>
+            </button>
+            <div id="bell-panel" class="bell-panel" hidden>
+              <div class="bell-head">
+                <span>Notifications</span>
+                <button id="bell-clear" class="link-btn">Mark all read</button>
+              </div>
+              <ul id="bell-list" class="bell-list"></ul>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn btn-ghost">Sign out</button>
+        </div>
+      </header>
+
+      <main id="page-content" class="page-content"></main>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+  <!-- Generic modal -->
+  <div id="modal-root" class="modal-root" hidden>
+    <div class="modal-backdrop" data-close="modal"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h3 id="modal-title" class="modal-title"></h3>
+        <button class="icon-btn" data-close="modal" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M18.3 5.71 12 12.01l-6.3-6.3-1.41 1.41 6.3 6.3-6.3 6.3 1.41 1.41 6.3-6.3 6.3 6.3 1.41-1.41-6.3-6.3 6.3-6.3z"/></svg>
+        </button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
